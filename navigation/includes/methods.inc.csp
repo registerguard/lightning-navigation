@@ -1,0 +1,144 @@
+<script language="cache" method="trim" arguments='string:%String="", mode:%String=""' returntype="%String">
+	
+	/**
+	 * Trim leading/trailing $c(9, 32, 160) characters.
+	 * 
+	 * @param      string
+	 * @param      string (Trim mode: "L" = left, "R" = right, "LR" = left & right)
+	 * @return     string.
+	 */
+	
+	quit $zstrip(string, $case($zconvert(mode, "U"), "L":"<W", "R":">W", "":"<>W"))
+	
+</script>
+
+<csp:comment>++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</csp:comment>
+
+<script language="cache" method="publication" arguments='publicationName:%String=""' returntype="dt.cms.schema.Publication">
+	
+	/**
+	 * Get story text.
+	 * 
+	 * @param      string
+	 * @return     object
+	 */
+	
+	new return
+	
+	set return = ""
+	
+	if ($length(publicationName)) {
+		
+		new id
+		
+		set id = ##class(dt.cms.support.Utilities).getPublicationID(publicationName)
+		
+		set return =  ##class(dt.cms.schema.Publication).%OpenId(id)
+		
+	}
+	
+	quit return
+	
+</script>
+
+<csp:comment>++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</csp:comment>
+
+<script language="cache" method="getAllSections" arguments='publicationName:%String=""' returntype="%ListOfObjects">
+	
+	/**
+	 * Get all sections found in a publication.
+	 * 
+	 * @param      string
+	 * @return     objects
+	 */
+	
+	; Code by John Ferguson
+	; http://snipurl.com/vklf0
+	; Slightly modified by Micky Hulse
+	
+	new listObj
+	
+	set listObj = ##class(%ListOfObjects).%New()
+	
+	if ($length(publicationName)) {
+		
+		new publicationId, i, publicationObj, sectionObj
+		
+		set publicationId = -1
+		set i = 1
+		set (publicationObj, sectionObj)  = ""
+		set count = 0
+		
+		// Get the publication ID:
+		set publicationId = ##class(dt.cms.support.Utilities).getPublicationID(publicationName)
+		
+		// Get the publication object:
+		set publicationObj = ##class(dt.cms.schema.Publication).%OpenId(publicationId)
+		
+		// Get all the sections:
+		if ($isObject(publicationObj)) {
+			
+			// Loop through each section within this publication:
+			set count = publicationObj.sections.Count()
+			for i=1:1:count {
+				
+				set sectionObj = publicationObj.sections.GetAt(i)
+				do:($isobject(sectionObj)) listObj.Insert(sectionObj)
+				
+			}
+			
+		}
+		
+	}
+	
+	quit listObj
+	
+</script>
+
+<csp:comment>++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</csp:comment>
+
+<script language="cache" method="getSections" arguments='publicationObj:dt.cms.schema.Publication="", sections:%String=""' returntype="%ListOfObjects">
+	
+	/**
+	 * Get specific sections found in a publication.
+	 * 
+	 * @param      object
+	 * @param      string
+	 * @return     objects
+	 */
+	
+	new listObj
+	
+	set listObj = ##class(%ListOfObjects).%New()
+	
+	if ($isobject(publicationObj) && $length(sections)) {
+		
+		new count, sectionId, i, section, sectionObj
+		
+		set count = 0
+		set sectionId = -1
+		set i = 1
+		set sectionObj  = ""
+		
+		set count = $length(sections, ",")
+		for i=1:1:count {
+			
+			// Get section name:
+			set section = ..trim($piece(sections, ",", i))
+			
+			// Get the section ID:
+			set sectionId = ##class(dt.cms.support.Utilities).getSectionID(publicationObj, section)
+			
+			// Get the section object:
+			set sectionObj = ##class(dt.cms.schema.Section).%OpenId(sectionId)
+			
+			// Add the section:
+			do:($isobject(sectionObj)) listObj.Insert(sectionObj)
+			
+		}
+		
+	}
+	
+	quit listObj
+	
+</script>

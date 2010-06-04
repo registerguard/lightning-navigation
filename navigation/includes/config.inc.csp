@@ -1,0 +1,26 @@
+<script language="cache" runat="server">
+	
+	//----------------------------------
+	// Global strings:
+	//----------------------------------
+	
+	set config("publisher", "domain") = "http://www.registerguard.com"
+	set config("publisher", "name") = "The Register-Guard"
+	
+	//----------------------------------
+	// List of sections to output:
+	//----------------------------------
+	
+	set config("sections") = "cityregion, sports, business, opinion"
+	
+	//----------------------------------
+	// Humanized section names:
+	//----------------------------------
+	
+	; Alternative: $zconvert(sectionName, "W")
+	set config("sections", "cityregion") = "City/Region"
+	set config("sections", "sports") = "Sports"
+	set config("sections", "business") = "Business"
+	set config("sections", "opinion") = "Opinion: Editorials &amp; Letters"
+	
+</script>

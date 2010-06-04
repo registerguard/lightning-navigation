@@ -1,0 +1,27 @@
+==========================
+Lightning Navigation
+==========================
+
+Just some example code that will return all or specific sections from a lighting publication.
+
+==========================
+Usage:
+==========================
+
+The default return is an object of pre-defined sections (check includes/config.csp):
+
+<dti:file:include base="site" file="/PATH/FROM/SITES/FOLDER/TO/navigation.csp?publication=web" />
+
+Specify "&mode=all" to get all sections:
+<dti:file:include base="site" file="/PATH/FROM/SITES/FOLDER/TO/navigation/navigation.csp?publication=web&mode=all" />
+
+You can also use a regular CSP include:<csp:include page="/ROOT/RELATIVE/PATH/TO/navigation/navigation.csp?publication=web">
+
+Note: You can also access navigation.csp directly via you browser. In other words, this code will work outside of a Lightning publication. :)
+
+==========================
+Disclaimer(s):
+==========================
+
+* I quickly slapped this code together (basically) from scratch, so use at your own risk.
+* Always test code on your testing server!

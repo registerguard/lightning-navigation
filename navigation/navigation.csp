@@ -1,0 +1,153 @@
+<csp:include page="./includes/config.inc.csp" />
+<!-- #include file="./includes/methods.inc.csp" -->
+
+<script language="cache" runat="server">
+	
+	//----------------------------------
+	// Declare:
+	//----------------------------------
+	
+	new k
+	
+	//----------------------------------
+	// Initialize:
+	//----------------------------------
+	
+	set k("publicationObject") = ""
+
+</script>
+
+<csp:if condition=(($Data(gPublication))&&($isobject(gPublication)))>
+	
+	<script language="cache" runat="server">
+		
+		/*
+		** 
+		** Use gPublication if exists.
+		** $Data() is needed to avoid errors.
+		** 
+		*/
+		
+		//----------------------------------
+		// Set the publication object:
+		//----------------------------------
+		
+		set k("publicationObject") = gPublication
+		
+	</script>
+
+<csp:else>
+	
+	<script language="cache" runat="server">
+		
+		/*
+		** 
+		** If gPublication is not available
+		** Pass the "publication" name via query string.
+		** 
+		*/
+		
+		//----------------------------------
+		// Initialize:
+		//----------------------------------
+		
+		set k("publicationName") = ""
+		
+		//----------------------------------
+		// "Get" the publication name:
+		//----------------------------------
+		
+		set k("publicationName") = $get(%request.Data("publication", 1))
+		
+	</script>
+	
+	<csp:if condition=($length(k("publicationName")))>
+		
+		<script language="cache" runat="server">
+			
+			//----------------------------------
+			// Get publication object:
+			//----------------------------------
+			
+			set k("publicationObject") = ..publication(k("publicationName"))
+			
+		</script>
+		
+	<csp:else>
+		
+		<p><b>Error:</b> Publication query string is not valid.</p>
+		
+	</csp:if>
+	
+</csp:if>
+
+<csp:if condition=($isobject(k("publicationObject")))>
+	
+	<script language="cache" runat="server">
+		
+		//----------------------------------
+		// Initialize:
+		//----------------------------------
+		
+		set k("mode") = $zconvert($get(%request.Data("mode", 1)), "U")
+		set k("sections") = ##class(%ListOfObjects).%New()
+		
+		//----------------------------------
+		// Sections:
+		//----------------------------------
+		
+		if (k("mode") = "ALL") {
+			
+			set k("sections") = ..getAllSections(k("publicationObject").getName())
+			
+		} else {
+			
+			set k("sections") = ..getSections(k("publicationObject"), config("sections"))
+			
+		}
+		
+	</script>
+	
+	<h1><a href="#(config("publisher", "domain"))#">#(config("publisher", "name"))#</a></h1>
+	
+	<ul>
+		
+		<csp:loop counter="x" from="1" to="#(k("sections").Count())#">
+			
+			<csp:if condition=($isobject(k("sections").GetAt(x)))>
+				
+				<csp:if condition=(k("mode")="ALL")>
+					
+					<li><a href="#(k("sections").GetAt(x).getLink())#">#(k("sections").GetAt(x).getLabel())#</a></li>
+					
+				<csp:else>
+					
+					<li><a href="#(k("sections").GetAt(x).getLink())#">#(config("sections", k("sections").GetAt(x).getName()))#</a></li>
+					
+				</csp:if>
+				
+			<csp:else>
+				
+				<!-- Section object error! -->
+				
+			</csp:if>
+			
+		</csp:loop>
+		
+	</ul>
+	
+<csp:else>
+	
+	<p><b>Error:</b> Publication object is not available.</p>
+	
+</csp:if>
+
+<script language="cache" runat="server">
+	
+	//----------------------------------
+	// Garbage collection:
+	//----------------------------------
+	
+	kill k
+
+</script>
