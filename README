@@ -19,6 +19,12 @@ You can also use a regular CSP include:<csp:include page="/ROOT/RELATIVE/PATH/T
 Note: You can also access navigation.csp directly via you browser. In other words, this code will work outside of a Lightning publication. :)
 
 ==========================
+Notes:
+==========================
+
+For prime-time code usage, I would probably remove the check for "mode" in the navigation.csp loop starting at line 119... I threw-in a "mode" check for the sake of example only. If it were me, I would go with the config file approach and maintain a list of allowed sections.
+
+==========================
 Disclaimer(s):
 ==========================
 
