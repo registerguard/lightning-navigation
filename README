@@ -9,7 +9,6 @@ Usage:
 ==========================
 
 The default return is an object of pre-defined sections (check includes/config.csp):
-
 <dti:file:include base="site" file="/PATH/FROM/SITES/FOLDER/TO/navigation.csp?publication=web" />
 
 Specify "&mode=all" to get all sections:
