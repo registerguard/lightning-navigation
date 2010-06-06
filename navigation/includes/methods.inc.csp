@@ -17,7 +17,7 @@
 <script language="cache" method="publication" arguments='publicationName:%String=""' returntype="dt.cms.schema.Publication">
 	
 	/**
-	 * Get story text.
+	 * Get publication object.
 	 * 
 	 * @param      string
 	 * @return     object
